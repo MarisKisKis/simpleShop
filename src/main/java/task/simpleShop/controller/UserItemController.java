@@ -24,19 +24,20 @@ public class UserItemController {
         this.itemService = itemService;
     }
 
+    //добавление товара в корзину
     @PostMapping("/add")
-    public ItemDto addItemToCart(@PathVariable @NotNull Long userId,
+    public void addItemToCart(@PathVariable @NotNull Long userId,
                                  @PathVariable @NotNull Long itemId) {
         log.info("Add item");
-        return itemService.addItemToCart(userId, itemId);
+        itemService.addItemToCart(userId, itemId);
     }
 
     @PostMapping("{/feedbacks")
-    public FeedbackDto addCommentByUser(@PathVariable @NotNull Long userId,
+    public FeedbackDto addFeedbackByUser(@PathVariable @NotNull Long userId,
                                         @PathVariable @NotNull Long itemId,
                                         @RequestBody @Valid FeedbackDto feedbackDto) {
         log.info("User with ID = {} add a feedback for item with ID = {}", userId, itemId);
-        return itemService.addCommentByUser(userId, itemId, feedbackDto);
+        return itemService.addFeedbackByUser(userId, itemId, feedbackDto);
     }
 
     @PostMapping("/ratings")

@@ -27,14 +27,6 @@ public class UserController {
         return userService.createUser(userDto);
     }
 
-    @GetMapping("/users")
-    public List<UserDto> getUsers(@RequestParam(name = "ids", required = false) List<Long> userIds,
-                                  @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                  @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        log.info("Get users");
-        return userService.getUsers(userIds, from, size);
-    }
-
     @DeleteMapping(value = "users/{userId}")
     public void removeUser(@PathVariable Long userId) {
         log.info("Delete ru.practicum.user with id = {}", userId);

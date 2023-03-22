@@ -6,9 +6,9 @@ import task.simpleShop.model.dto.ItemDto;
 
 public interface ItemService {
 
-    ItemDto addItemToCart(Long userId, long itemId);
+    void addItemToCart(Long userId, long itemId);
 
-    FeedbackDto addCommentByUser(Long userId, Long itemId, FeedbackDto feedbackDto);
+    FeedbackDto addFeedbackByUser(Long userId, Long itemId, FeedbackDto feedbackDto);
 
     Rating addRatingByUser(Long userId, Long itemId, Rating rating);
 }

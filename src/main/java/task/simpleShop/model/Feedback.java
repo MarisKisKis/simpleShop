@@ -30,6 +30,7 @@ public class Feedback {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "text")
     private String text;
 
     @NotNull

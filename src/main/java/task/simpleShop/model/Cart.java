@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
-
 
 @Entity
 @Getter
@@ -13,32 +13,26 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "organisations")
-public class Organisation {
+@Table(name = "cart")
+public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @NonNull
-    @Column(name = "name")
-    private String name;
-
-    @NonNull
-    @Column(name = "description")
-    private String description;
-
-    @Lob
-    @Column(name = "image")
-    private byte[] image;
-
-    @Column(name = "image_content_type")
-    private String imageContentType;
+    @NotNull
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @OneToMany(mappedBy = "organisation",
             cascade = CascadeType.MERGE,
             fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Item> items;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "cart_status")
+    private CartStatus cartStatus;
 }

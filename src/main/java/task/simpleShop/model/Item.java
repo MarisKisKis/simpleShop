@@ -2,6 +2,9 @@ package task.simpleShop.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import lombok.extern.jackson.Jacksonized;
+import task.simpleShop.model.dto.FeedbackDto;
+import task.simpleShop.model.dto.ItemDto;
 
 import javax.persistence.*;
 import java.util.List;
@@ -28,10 +31,6 @@ public class Item {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "organisation_id")
-    private Organisation organisation;
-
     @NonNull
     @Column(name = "price")
     private double price;
@@ -39,10 +38,8 @@ public class Item {
     @Column(name = "amount")
     private long amount;
 
-    @Column(name = "discount")
-    private String discount;
-
-    private List<String> keywords;
+    @Column(name = "keywords")
+    private String keywords;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "characteristics")
@@ -51,4 +48,18 @@ public class Item {
     @Enumerated(EnumType.STRING)
     @Column(name = "rating")
     private Rating rating;
+
+    @OneToMany(mappedBy = "item",
+            cascade = CascadeType.MERGE,
+            fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Feedback> feedbacks;
+    @ManyToOne
+    @JoinColumn(name = "discount_id")
+    private Discount discount;
+
+    @ManyToOne
+    @JoinColumn(name = "organisation_id")
+    private Organisation organisation;
+
 }
