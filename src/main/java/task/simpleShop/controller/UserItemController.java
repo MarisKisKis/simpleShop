@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import task.simpleShop.model.Rating;
 import task.simpleShop.model.dto.FeedbackDto;
-import task.simpleShop.model.dto.ItemDto;
 import task.simpleShop.service.ItemService;
 
 import javax.validation.Valid;
@@ -14,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @Slf4j
 @Valid
 @RestController
-@RequestMapping("/items/{userId}/{itemId}")
+@RequestMapping("/items")
 public class UserItemController {
 
     private final ItemService itemService;
@@ -24,26 +23,29 @@ public class UserItemController {
         this.itemService = itemService;
     }
 
+
     //добавление товара в корзину
-    @PostMapping("/add")
-    public void addItemToCart(@PathVariable @NotNull Long userId,
+    @PostMapping("/{itemId}/add")
+    public void addItemToCart(@RequestHeader("X-Sharer-User-Id")  Long userId,
                                  @PathVariable @NotNull Long itemId) {
         log.info("Add item");
         itemService.addItemToCart(userId, itemId);
     }
 
-    @PostMapping("{/feedbacks")
-    public FeedbackDto addFeedbackByUser(@PathVariable @NotNull Long userId,
+    //добавление отзыва к товару пользователем
+    @PostMapping("{/{itemId}/feedbacks")
+    public void addFeedbackByUser(@RequestHeader("X-Sharer-User-Id") Long userId,
                                         @PathVariable @NotNull Long itemId,
                                         @RequestBody @Valid FeedbackDto feedbackDto) {
         log.info("User with ID = {} add a feedback for item with ID = {}", userId, itemId);
-        return itemService.addFeedbackByUser(userId, itemId, feedbackDto);
+        itemService.addFeedbackByUser(userId, itemId, feedbackDto);
     }
 
-    @PostMapping("/ratings")
-    public Rating addRating(@PathVariable @NotNull Long userId,
+    //добавление оценки пользователем
+    @PostMapping("/{itemId}/ratings")
+    public void addRating(@RequestHeader("X-Sharer-User-Id")  Long userId,
                             @PathVariable @NotNull Long itemId, Rating rating) {
         log.info("User with ID = {} add a rating for item with ID = {}", userId, itemId);
-        return itemService.addRatingByUser(userId, itemId, rating);
+        itemService.addRatingByUser(userId, itemId, rating);
     }
 }

@@ -13,6 +13,7 @@ import task.simpleShop.service.mapper.UserMapper;
 
 import java.awt.print.Pageable;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -40,6 +41,27 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long userId) {
         getUserById(userId);
         userRepository.deleteById(userId);
+    }
+
+    @Override
+    public void topUpUserBalance(long userId, double amount) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()){
+            throw new NotFoundException(String.format("User with ID %s not found", userId));
+        }
+        User user = userOptional.get();
+        user.setBalance(user.getBalance()+amount);
+        log.info("Balance changed");
+    }
+
+    @Override
+    public List<UserDto> getAllUsers() {
+        return null;
+    }
+
+    @Override
+    public List<UserDto> getUserById(long userId) {
+        return null;
     }
 
     private UserDto getUserById(Long userId) {

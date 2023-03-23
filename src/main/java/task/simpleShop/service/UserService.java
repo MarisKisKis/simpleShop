@@ -10,4 +10,10 @@ public interface UserService {
 
 
     void deleteUser(Long userId);
+
+    void topUpUserBalance(long userId, double amount);
+
+    List<UserDto> getAllUsers();
+
+    List<UserDto> getUserById(long userId);
 }

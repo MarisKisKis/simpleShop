@@ -8,7 +8,7 @@ public interface ItemService {
 
     void addItemToCart(Long userId, long itemId);
 
-    FeedbackDto addFeedbackByUser(Long userId, Long itemId, FeedbackDto feedbackDto);
+    void addFeedbackByUser(Long userId, Long itemId, FeedbackDto feedbackDto);
 
-    Rating addRatingByUser(Long userId, Long itemId, Rating rating);
+    void addRatingByUser(Long userId, Long itemId, Rating rating);
 }
