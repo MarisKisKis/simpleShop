@@ -4,11 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import task.simpleShop.model.dto.ItemDto;
+import task.simpleShop.model.dto.NotificationDto;
 import task.simpleShop.model.dto.UserDto;
 import task.simpleShop.service.CartService;
 import task.simpleShop.service.UserService;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -45,10 +47,18 @@ public class AdminController {
     }
 
     //получение информации о пользователе
-    @GetMapping("/users/{userId}")
-    public List<UserDto> getUserById(@RequestParam long userId) {
+    @GetMapping("/users")
+    public UserDto getUserById(@RequestParam long userId) {
         log.info("Receiving all users information");
         return userService.getUserById(userId);
+    }
+
+    //отправка пользователю уведомления
+    @PostMapping("/notification")
+    public void sendNotification(@RequestParam long userId, @RequestBody NotificationDto notificationDto) {
+        log.info("Sending notification to user with id = {}", userId);
+        notificationDto.setDate(LocalDateTime.now());
+        userService.createNotification(userId, notificationDto);
     }
 
 
@@ -59,4 +69,10 @@ public class AdminController {
         userService.topUpUserBalance(userId, amount);
     }
 
+    //удаление админом пользователя
+    @DeleteMapping
+    public void removeUser(@RequestParam Long userId) {
+        log.info("Delete user with id = {}", userId);
+        userService.deleteUser(userId);
+    }
 }
