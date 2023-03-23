@@ -18,10 +18,10 @@ public class ItemMapper {
                 .characteristics(item.getCharacteristics())
                 .rating(item.getRating())
                 .feedbacks(item.getFeedbacks())
-                .discountDto(ItemDto.DiscountDto.builder()
+                .discountDto(ItemDto.DiscountShortDto.builder()
                         .value(item.getDiscount().getValue())
                         .build())
-                .organisationDto(ItemDto.OrganisationDto.builder()
+                .organisationDto(ItemDto.OrganisationShortDto.builder()
                         .name(item.getOrganisation().getName())
                         .build())
                 .build();

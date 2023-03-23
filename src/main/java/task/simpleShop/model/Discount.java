@@ -6,7 +6,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -25,8 +24,11 @@ public class Discount {
     @Column(name = "value")
     private Integer value;
 
-    @Column(name = "duration")
-    private LocalDateTime duration;
+    @Column(name = "start")
+    private LocalDateTime start;
+
+    @Column(name = "end")
+    private LocalDateTime end;
 
     @OneToMany(mappedBy = "discount",
             cascade = CascadeType.MERGE,

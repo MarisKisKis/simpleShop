@@ -5,11 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import task.simpleShop.exception.NotFoundException;
 import task.simpleShop.model.*;
+import task.simpleShop.model.dto.DiscountDto;
 import task.simpleShop.model.dto.FeedbackDto;
-import task.simpleShop.repository.CartRepository;
-import task.simpleShop.repository.FeedbackRepository;
-import task.simpleShop.repository.ItemRepository;
-import task.simpleShop.repository.UserRepository;
+import task.simpleShop.model.dto.ItemDto;
+import task.simpleShop.repository.*;
+import task.simpleShop.service.mapper.DiscountMapper;
 import task.simpleShop.service.mapper.FeedbackMapper;
 
 import java.time.LocalDateTime;
@@ -31,13 +31,19 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
 
     private final FeedbackRepository feedbackRepository;
+    
+    private final DiscountRepository discountRepository;
+
+    private final OrganisationRepository organisationRepository;
 
     @Autowired
-    public ItemServiceImpl(ItemRepository itemRepository, CartRepository cartRepository, UserRepository userRepository, FeedbackRepository feedbackRepository) {
+    public ItemServiceImpl(ItemRepository itemRepository, CartRepository cartRepository, UserRepository userRepository, FeedbackRepository feedbackRepository, DiscountRepository discountRepository, OrganisationRepository organisationRepository) {
         this.itemRepository = itemRepository;
         this.cartRepository = cartRepository;
         this.userRepository = userRepository;
         this.feedbackRepository = feedbackRepository;
+        this.discountRepository = discountRepository;
+        this.organisationRepository = organisationRepository;
     }
 
     //добавление товара в корзину пользователя
@@ -79,6 +85,43 @@ public class ItemServiceImpl implements ItemService {
             throw new NotFoundException(String.format("Item in cart history for User with ID %s not found", userId));
         }
         item.setRating(rating);
+    }
+
+    @Override
+    public void updateItem(long itemId, ItemDto itemDto) {
+        Item item = getItem(itemId);
+        if (itemDto.getName()!= null) {
+            item.setName(itemDto.getName());
+        } else if (itemDto.getDescription()!= null) {
+            item.setDescription(itemDto.getDescription());
+        } else if (itemDto.getPrice()!=0) {
+            item.setPrice(itemDto.getPrice());
+        } else if (itemDto.getAmount()!=0) {
+            item.setAmount(itemDto.getAmount());
+        } else if (itemDto.getKeywords()!=null) {
+            item.setKeywords(itemDto.getKeywords());
+        } else if (itemDto.getCharacteristics()!=null) {
+            item.setCharacteristics(itemDto.getCharacteristics());
+        } else if (itemDto.getRating()!=null) {
+            item.setRating(itemDto.getRating());
+        } else if (itemDto.getFeedbacks()!=null) {
+            item.setFeedbacks(itemDto.getFeedbacks());
+        } else if (itemDto.getDiscountDto()!=null) {
+            Optional<Discount> discountOpt = discountRepository.findById(itemDto.getDiscountDto().getId());
+            Discount discount = discountOpt.get();
+            item.setDiscount(discount);
+        } else if (itemDto.getOrganisationDto()!=null) {
+            Optional<Organisation> optionalOrganisation = organisationRepository.findById(itemDto.getOrganisationDto().getId());
+            Organisation organisation = optionalOrganisation.get();
+            item.setOrganisation(organisation);
+        } else {
+            throw new NotFoundException(String.format("Item with ID %s not found", itemId));
+        }
+    }
+
+    @Override
+    public void createDiscount(DiscountDto discountDto) {
+        discountRepository.save(DiscountMapper.toDiscount(discountDto));
     }
 
     // приватный метод для быстрого получения товара из репозитория

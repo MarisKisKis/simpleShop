@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import task.simpleShop.model.dto.NotificationDto;
+import task.simpleShop.model.dto.OrganisationDto;
 import task.simpleShop.model.dto.UserDto;
 import task.simpleShop.service.UserService;
 
@@ -37,6 +38,13 @@ public class UserController {
     public UserDto createUser(@RequestBody @Valid UserDto userDto) {
         log.info("Create new user {}", userDto);
         return userService.createUser(userDto);
+    }
+
+    //создание организации
+    @PostMapping("/organisation")
+    public void createOrganisation(@RequestBody @Valid OrganisationDto organisationDto) {
+        log.info("Creating new organisation");
+        userService.createOrganisation(organisationDto);
     }
 
     //удаление пользователя

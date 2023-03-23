@@ -18,38 +18,33 @@ public class ItemDto {
 
     private long id;
 
-    @NotBlank
     private String name;
 
     private String description;
 
-    @NotBlank
     private double price;
 
-    @NotBlank
     private long amount;
 
     private String keywords;
 
     private Characteristics characteristics;
 
-    @NotBlank
     private Rating rating;
 
     private List<Feedback> feedbacks;
 
-    @NotBlank
-    private DiscountDto discountDto;
+    private DiscountShortDto discountDto;
 
-    @NotBlank
-    private OrganisationDto organisationDto;
+    private OrganisationShortDto organisationDto;
 
 
     @Getter
     @Setter
     @Builder
     @Jacksonized
-    public static class DiscountDto {
+    public static class DiscountShortDto {
+        private long id;
         private Integer value;
     }
 
@@ -57,7 +52,8 @@ public class ItemDto {
     @Setter
     @Builder
     @Jacksonized
-    public static class OrganisationDto {
+    public static class OrganisationShortDto {
+        private long id;
         private String name;
     }
 }

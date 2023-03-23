@@ -1,6 +1,5 @@
 package task.simpleShop.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,13 +7,15 @@ import task.simpleShop.exception.ExistsElementException;
 import task.simpleShop.exception.NotFoundException;
 import task.simpleShop.model.User;
 import task.simpleShop.model.dto.NotificationDto;
+import task.simpleShop.model.dto.OrganisationDto;
 import task.simpleShop.model.dto.UserDto;
 import task.simpleShop.repository.NotificationRepository;
+import task.simpleShop.repository.OrganisationRepository;
 import task.simpleShop.repository.UserRepository;
 import task.simpleShop.service.mapper.NotificationMapper;
+import task.simpleShop.service.mapper.OrganisationMapper;
 import task.simpleShop.service.mapper.UserMapper;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,10 +27,13 @@ public class UserServiceImpl implements UserService {
 
     private final NotificationRepository notificationRepository;
 
+    private final OrganisationRepository organisationRepository;
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, NotificationRepository notificationRepository) {
+    public UserServiceImpl(UserRepository userRepository, NotificationRepository notificationRepository, OrganisationRepository organisationRepository) {
         this.userRepository = userRepository;
         this.notificationRepository = notificationRepository;
+        this.organisationRepository = organisationRepository;
     }
 
     @Override
@@ -93,5 +97,10 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(NotificationMapper::toNotificationDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void createOrganisation(OrganisationDto organisationDto) {
+        organisationRepository.save(OrganisationMapper.toOrganisation(organisationDto));
     }
 }

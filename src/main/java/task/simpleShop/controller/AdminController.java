@@ -3,13 +3,17 @@ package task.simpleShop.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import task.simpleShop.model.Discount;
+import task.simpleShop.model.dto.DiscountDto;
 import task.simpleShop.model.dto.ItemDto;
 import task.simpleShop.model.dto.NotificationDto;
 import task.simpleShop.model.dto.UserDto;
 import task.simpleShop.service.CartService;
+import task.simpleShop.service.ItemService;
 import task.simpleShop.service.UserService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,10 +27,13 @@ public class AdminController {
 
     private final UserService userService;
 
+    private final ItemService itemService;
+
     @Autowired
-    public AdminController(CartService cartService, UserService userService) {
+    public AdminController(CartService cartService, UserService userService, ItemService itemService) {
         this.cartService = cartService;
         this.userService = userService;
+        this.itemService = itemService;
     }
 
     //получение админом истории покупок любого пользователя
@@ -47,8 +54,8 @@ public class AdminController {
     }
 
     //получение информации о пользователе
-    @GetMapping("/users")
-    public UserDto getUserById(@RequestParam long userId) {
+    @GetMapping("/users/{userId}")
+    public UserDto getUserById(@PathVariable @NotNull long userId) {
         log.info("Receiving all users information");
         return userService.getUserById(userId);
     }
@@ -61,6 +68,19 @@ public class AdminController {
         userService.createNotification(userId, notificationDto);
     }
 
+    //создание админом новой акции
+    @PostMapping("/discount")
+    public void createDiscount(@RequestBody DiscountDto discountDto) {
+        log.info("Creating new discount");
+        itemService.createDiscount(discountDto);
+    }
+
+    //изменение информации о товаре админом
+    @PutMapping("/items/{itemId}")
+    public void updateItem(@PathVariable @NotNull long itemId, @RequestBody ItemDto itemDto) {
+        log.info("Updating item with id = {}", itemId);
+        itemService.updateItem(itemId, itemDto);
+    }
 
     //пополнение баланса пользователя админом
     @PatchMapping("/balance")

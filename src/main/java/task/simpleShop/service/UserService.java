@@ -1,6 +1,7 @@
 package task.simpleShop.service;
 
 import task.simpleShop.model.dto.NotificationDto;
+import task.simpleShop.model.dto.OrganisationDto;
 import task.simpleShop.model.dto.UserDto;
 
 import java.util.List;
@@ -21,4 +22,6 @@ public interface UserService {
     void createNotification(long userId, NotificationDto notificationDto);
 
     List<NotificationDto> getUserNotifications(Long userId);
+
+    void createOrganisation(OrganisationDto organisationDto);
 }
