@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import task.simpleShop.model.Rating;
 import task.simpleShop.model.dto.FeedbackDto;
+import task.simpleShop.model.dto.ItemRequestDto;
 import task.simpleShop.service.ItemService;
 
 import javax.validation.Valid;
@@ -47,5 +48,13 @@ public class UserItemController {
                             @PathVariable @NotNull Long itemId, Rating rating) {
         log.info("User with ID = {} add a rating for item with ID = {}", userId, itemId);
         itemService.addRatingByUser(userId, itemId, rating);
+    }
+
+    //создание пользователем запроса на добавление вещи
+    @PostMapping("/requests")
+    public void createRequest(@RequestHeader("X-Sharer-User-Id")  Long userId, @RequestParam long organisationId,
+                              @RequestBody ItemRequestDto itemRequestDto) {
+        log.info("User with ID = {} created a request", userId);
+        itemService.createRequest(userId, organisationId, itemRequestDto);
     }
 }

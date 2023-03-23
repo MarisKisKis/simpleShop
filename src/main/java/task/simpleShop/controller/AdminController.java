@@ -4,10 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import task.simpleShop.model.Discount;
-import task.simpleShop.model.dto.DiscountDto;
-import task.simpleShop.model.dto.ItemDto;
-import task.simpleShop.model.dto.NotificationDto;
-import task.simpleShop.model.dto.UserDto;
+import task.simpleShop.model.dto.*;
 import task.simpleShop.service.CartService;
 import task.simpleShop.service.ItemService;
 import task.simpleShop.service.UserService;
@@ -58,6 +55,13 @@ public class AdminController {
     public UserDto getUserById(@PathVariable @NotNull long userId) {
         log.info("Receiving all users information");
         return userService.getUserById(userId);
+    }
+
+    //публикация товара в магазине
+    @PostMapping("/items")
+    public void createItems() {
+        log.info("Checking for requests to approve");
+        itemService.createItems();
     }
 
     //отправка пользователю уведомления

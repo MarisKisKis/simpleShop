@@ -2,13 +2,9 @@ package task.simpleShop.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import lombok.extern.jackson.Jacksonized;
-import task.simpleShop.model.dto.FeedbackDto;
-import task.simpleShop.model.dto.ItemDto;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter

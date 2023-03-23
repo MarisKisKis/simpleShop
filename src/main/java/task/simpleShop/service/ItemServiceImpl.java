@@ -8,9 +8,11 @@ import task.simpleShop.model.*;
 import task.simpleShop.model.dto.DiscountDto;
 import task.simpleShop.model.dto.FeedbackDto;
 import task.simpleShop.model.dto.ItemDto;
+import task.simpleShop.model.dto.ItemRequestDto;
 import task.simpleShop.repository.*;
 import task.simpleShop.service.mapper.DiscountMapper;
 import task.simpleShop.service.mapper.FeedbackMapper;
+import task.simpleShop.service.mapper.ItemRequestMapper;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,14 +38,17 @@ public class ItemServiceImpl implements ItemService {
 
     private final OrganisationRepository organisationRepository;
 
+    private final ItemRequestRepository itemRequestRepository;
+
     @Autowired
-    public ItemServiceImpl(ItemRepository itemRepository, CartRepository cartRepository, UserRepository userRepository, FeedbackRepository feedbackRepository, DiscountRepository discountRepository, OrganisationRepository organisationRepository) {
+    public ItemServiceImpl(ItemRepository itemRepository, CartRepository cartRepository, UserRepository userRepository, FeedbackRepository feedbackRepository, DiscountRepository discountRepository, OrganisationRepository organisationRepository, ItemRequestRepository itemRequestRepository) {
         this.itemRepository = itemRepository;
         this.cartRepository = cartRepository;
         this.userRepository = userRepository;
         this.feedbackRepository = feedbackRepository;
         this.discountRepository = discountRepository;
         this.organisationRepository = organisationRepository;
+        this.itemRequestRepository = itemRequestRepository;
     }
 
     //добавление товара в корзину пользователя
@@ -122,6 +127,34 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void createDiscount(DiscountDto discountDto) {
         discountRepository.save(DiscountMapper.toDiscount(discountDto));
+    }
+
+    @Override
+    public void createRequest(Long userId, Long organisationId, ItemRequestDto itemRequestDto) {
+        User user = getUser(userId);
+        Optional<Organisation> optionalOrganisation = organisationRepository.findById(organisationId);
+        Organisation organisation = optionalOrganisation.get();
+        ItemRequest itemRequest = ItemRequestMapper.toItemRequest(itemRequestDto, user, organisation);
+        itemRequest.setStatus(RequestStatus.WAITING);
+        itemRequestRepository.save(itemRequest);
+    }
+
+    //проверка запросов и публикация товаров
+    @Override
+    public void createItems() {
+        List<ItemRequest> waitingRequests = itemRequestRepository.findItemRequestByStatusWaiting();
+        List<Item> items = new ArrayList<>();
+        for (ItemRequest itemRequest: waitingRequests) {
+            if (itemRequest.getOrganisation()!=null) {
+                items.add(itemRequest.getItem());
+            } else {
+                throw new NotFoundException(String.format("There must be information about organisation"));
+            }
+        }
+        for (Item item : items) {
+            itemRepository.save(item);
+        }
+
     }
 
     // приватный метод для быстрого получения товара из репозитория

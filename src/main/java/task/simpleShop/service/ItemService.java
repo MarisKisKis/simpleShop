@@ -4,6 +4,7 @@ import task.simpleShop.model.Rating;
 import task.simpleShop.model.dto.DiscountDto;
 import task.simpleShop.model.dto.FeedbackDto;
 import task.simpleShop.model.dto.ItemDto;
+import task.simpleShop.model.dto.ItemRequestDto;
 
 public interface ItemService {
 
@@ -16,4 +17,8 @@ public interface ItemService {
     void updateItem(long itemId, ItemDto itemDto);
 
     void createDiscount(DiscountDto discountDto);
+
+    void createRequest(Long userId, Long organisationId, ItemRequestDto itemRequestDto);
+
+    void createItems();
 }
